@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Texel Energy Transition</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+
+<body>
+  <header>
+    <h1 class="title">Texel Energy Transition</h1>
+    <div id="energyBarContainer">
+      <div id="energyBarFill"></div>
+      <div id="energyBarLabel">
+        <span id="energyLabelText">0 / 100 kWh</span>
+      </div>
+    </div>
+    <div id="budgetBarContainer">
+      <div id="budgetBarFill"></div>
+      <div id="budgetBarLabel">
+        <span id="budgetLabelText">0 / 100 €</span>
+      </div>
+    </div>
+  </header>
+  
+
+  <main class="layout">
+    <!-- Left Panel -->
+    <section class="input-panel">
+      
+      <div class="scenario-selector">
+        <label>Scenario: 
+          <select id="scenarioSelect">
+            <option value="current">Current</option>
+            <option value="scenarioA">Scenario A</option>
+            <option value="scenarioB">Scenario B</option>
+          </select>
+        </label>
+      </div>
+
+      <label>Solar Panels: (in hectares) <button class="info-btn" data-source="Solar">i</button> <input type="number" id="solarInput" value="0"></label>
+      <label>Biogas Digesters: <button class="info-btn" data-source="Biogas">i</button> <input type="number" id="biogasInput" value="0"></label>
+      <label>Small Wind Turbines: <button class="info-btn" data-source="smallTurbine">i</button> <input type="number" id="sTurbInput" value="0"></label>
+      <label>Large Wind Turbines: <button class="info-btn" data-source="largeTurbine">i</button> <input type="number" id="lTurbInput" value="0"></label>
+      <section class="chart-panel">
+        <div id="sankeyChart"></div>
+      </section>
+    </section>
+  
+    <!-- Middle Panel -->
+    <section class="map-panel">
+      <div id="interactiveMap">
+        <img id="texelMap" src="./resources/Images/Texel_0.png" alt="Texel Map" />
+        <div class="hotspot" id="Oosterend" onclick="showInfo('Oosterend')"></div>
+        <div class="hotspot" id="Den_Burg" onclick="showInfo('Den_Burg')"></div>
+        <div class="hotspot" id="Oudeschild" onclick="showInfo('Oudeschild')"></div>
+      </div>
+    </section>
+  
+    <!-- Right Panel (hidden by default) -->
+    <section class="info-panel">
+      <div id="infoContent"></div>
+    </section>
+  </main>  
+
+  <script src="script.js"></script>
+</body>
+</html>

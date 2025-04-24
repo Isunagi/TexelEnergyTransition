@@ -1,0 +1,418 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding-top: 8rem;
+  background: #86ceea;
+  color: #000000;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.25rem 1rem;
+  background-color: #557e3c;
+  height: auto;
+  min-height: 8rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+header .title {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+  color: #ffffff;
+  text-align: center;
+}
+header #energyStatus {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+  font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+  gap: 0.5rem;
+  color: #ffffff;
+  width: 100%;
+}
+header #energyStatus span {
+  font-size: 0.85rem;
+  color: #ffffff;
+  font-weight: bold;
+  text-align: center;
+  padding: 0 0.25rem;
+}
+header #energyStatus span strong {
+  font-weight: bold;
+}
+header #energyBarContainer, header #budgetBarContainer {
+  height: 24px;
+  position: relative;
+  width: 90%;
+  background-color: #444444;
+  border-radius: 12px;
+  margin: 0.5rem auto;
+  overflow: hidden;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.6);
+}
+header #budgetBarContainer {
+  margin-bottom: 0.5rem;
+}
+header #energyBarLabel, header #budgetBarLabel {
+  font-size: 0.75rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #ffffff;
+  pointer-events: none;
+}
+header #energyBarFill {
+  height: 100%;
+  background: linear-gradient(to right, #4caf50, #8bc34a);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+header #budgetBarFill {
+  height: 100%;
+  background: linear-gradient(to right, #f39c12, #f3e40f);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.layout {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  padding: 1rem;
+  min-height: calc(100vh - 8rem);
+}
+
+.scenario-selector {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+.scenario-selector label {
+  width: 100%;
+}
+.scenario-selector select {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  width: 100%;
+  border: 1px solid #cccccc;
+  border-radius: 0.25rem;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+.scenario-selector select:focus {
+  outline: none;
+  border-color: #557e3c;
+  box-shadow: 0 0 0 2px rgba(85, 126, 60, 0.3);
+}
+
+.input-panel {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 1rem;
+  width: 30%;
+}
+.input-panel label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  font-weight: bold;
+}
+.input-panel label .info-btn {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  flex: 0 0 auto;
+}
+.input-panel label input[type=number] {
+  flex: 1 1 100%;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+.input-panel .chart-panel {
+  width: 100%;
+  flex: 1;
+  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.info-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #cccccc;
+  color: #ffffff;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.info-btn:hover {
+  background-color: rgb(73.3467741935, 108.7258064516, 51.7741935484);
+  transform: scale(1.1);
+}
+.info-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(85, 126, 60, 0.5);
+}
+
+.map-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  position: relative;
+}
+.map-panel #interactiveMap {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  position: relative;
+}
+.map-panel .hotspot {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(206, 188, 25, 0.4);
+  border: 2px solid rgb(151, 149, 23);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.map-panel .hotspot:hover {
+  transform: scale(1.1);
+}
+
+.info-panel {
+  width: 25%;
+  display: none;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-left: 1px solid #cccccc;
+  box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.1);
+}
+.info-panel.show {
+  display: block;
+}
+.info-panel #infoContent {
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 0.5rem;
+}
+.info-panel #infoContent img {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+  border-radius: 0.25rem;
+}
+.info-panel #infoContent h3 {
+  margin-top: 0;
+  color: #557e3c;
+}
+.info-panel #infoContent ul {
+  padding-left: 1.5rem;
+}
+
+.energy-split-container {
+  margin: 1rem 0;
+}
+.energy-split-container .split-details {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+.energy-split-container .split-details .split-heat {
+  color: coral;
+}
+.energy-split-container .split-details .split-electric {
+  color: #f3d40f;
+}
+
+.subtypes-container {
+  margin-top: 1.5rem;
+}
+.subtypes-container .subtypes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.subtypes-container .subtype-item {
+  background-color: rgb(254.1, 254.1, 254.1);
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.subtypes-container .subtype-item h5 {
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+  color: #557e3c;
+  border-bottom: 1px solid #cccccc;
+  padding-bottom: 0.25rem;
+}
+.subtypes-container .subtype-item .subtype-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.subtypes-container .subtype-item .subtype-details .keywords {
+  font-size: 0.85rem;
+}
+.subtypes-container .subtype-item .subtype-details .keywords span {
+  font-weight: bold;
+}
+.subtypes-container .subtype-item .subtype-details .ratings {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.subtypes-container .subtype-item .subtype-details .ratings .rating {
+  flex: 1 1 48%;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+.subtypes-container .subtype-item .subtype-details .ratings .rating span:first-child {
+  font-weight: bold;
+}
+.subtypes-container .subtype-item .subtype-details .ratings .rating .rating-value {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  color: #ffffff;
+  text-align: center;
+  line-height: 24px;
+  font-weight: bold;
+}
+.subtypes-container .subtype-item .subtype-details .ratings .rating .rating-a {
+  background-color: #2ecc71;
+}
+.subtypes-container .subtype-item .subtype-details .ratings .rating .rating-b {
+  background-color: #f39c12;
+}
+.subtypes-container .subtype-item .subtype-details .ratings .rating .rating-c {
+  background-color: #e74c3c;
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    padding-top: 10rem;
+  }
+  header {
+    height: auto;
+    padding: 0.5rem;
+  }
+  header .title {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+  }
+  header #energyStatus {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+  }
+  header #energyStatus span {
+    margin: 0.125rem 0;
+  }
+  header #energyBarContainer, header #budgetBarContainer {
+    width: 100%;
+    margin: 0.25rem auto;
+  }
+  .layout {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .input-panel {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .input-panel label {
+    flex: 1 1 45%;
+    padding-right: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .map-panel {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  .info-panel {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid #cccccc;
+    box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+  }
+}
+@media screen and (max-width: 400px) {
+  body {
+    padding-top: 12rem;
+  }
+  header {
+    padding: 0.5rem 0.25rem;
+  }
+  header .title {
+    font-size: 1rem;
+  }
+  header #energyStatus span {
+    font-size: 0.75rem;
+    width: 100%;
+    text-align: center;
+  }
+  .input-panel {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .input-panel label {
+    flex: 1 1 100%;
+    padding-right: 0;
+    margin-bottom: 0.5rem;
+  }
+  .input-panel input[type=number] {
+    font-size: 0.85rem;
+    padding: 0.25rem;
+  }
+  .hotspot {
+    width: 30px !important;
+    height: 30px !important;
+  }
+  .info-panel #infoContent {
+    padding: 0.75rem;
+  }
+  .info-panel #infoContent h3 {
+    font-size: 1.1rem;
+  }
+  .info-panel #infoContent h4 {
+    font-size: 1rem;
+  }
+  .info-panel #infoContent ul {
+    padding-left: 0.75rem;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */

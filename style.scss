@@ -1,0 +1,556 @@
+// Color variables
+$main-color: #86ceea;
+$accent-color: #557e3c;
+$budget-color: #e74c3c;
+$text-color: #000000;
+$text-light: #ffffff;
+$text-muted: #444444;
+$background-light: #f9f9f9;
+$border-color: #cccccc;
+$energy-bar-start: #4caf50;
+$energy-bar-end: #8bc34a;
+$budget-bar-start: #f39c12;
+$budget-bar-end: #f3e40f;
+$hotspot-bg: rgba(206, 188, 25, 0.4);
+$hotspot-border: rgb(151, 149, 23);
+$shadow-color: rgba(0, 0, 0, 0.1);
+$shadow-color-dark: rgba(0, 0, 0, 0.6);
+
+// Sizing variables
+$info-button-size: 20px;
+$info-button-radius: 50%;
+
+// Spacing variables
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 0.75rem;
+$spacing-base: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+
+// Font size variables
+$font-xs: 0.75rem;
+$font-sm: 0.85rem;
+$font-base: 1rem;
+$font-md: 1.1rem;
+$font-lg: 1.2rem;
+$font-xl: 1.5rem;
+
+// Layout variables
+$header-height: 8rem;
+$header-height-tablet: 10rem;
+$header-height-mobile: 12rem;
+$input-panel-width: 30%;
+$map-panel-width: 50%;
+$info-panel-width: 25%;
+$hotspot-size: 40px;
+$hotspot-size-mobile: 30px;
+$bar-height: 24px;
+$bar-radius: 12px;
+
+// Breakpoints for responsive design
+$breakpoint-tablet: 768px;
+$breakpoint-mobile: 400px;
+
+// Transitions
+$transition-fast: 0.2s ease;
+$transition-normal: 0.3s ease;
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+// Base styles
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding-top: $header-height;
+  background: $main-color;
+  color: $text-color;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-xs $spacing-base;
+  background-color: $accent-color;
+  height: auto;
+  min-height: $header-height;
+  box-shadow: 0 2px 4px $shadow-color;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+
+  .title {
+    font-size: $font-lg;
+    margin: $spacing-sm 0;
+    color: $text-light;
+    text-align: center;
+  }
+
+  #energyStatus {
+    display: flex;
+    justify-content: space-around;
+    margin-top: $spacing-sm;
+    flex-wrap: wrap;
+    font-size: clamp($font-sm, 1.5vw, $font-md);
+    gap: $spacing-sm;
+    color: $text-light;
+    width: 100%;
+
+    span {
+      font-size: $font-sm;
+      color: $text-light;
+      font-weight: bold;
+      text-align: center;
+      padding: 0 $spacing-xs;
+
+      strong {
+        font-weight: bold;
+      }
+    }
+  }
+
+  #energyBarContainer, #budgetBarContainer {
+    height: $bar-height;
+    position: relative;
+    width: 90%;
+    background-color: $text-muted;
+    border-radius: $bar-radius;
+    margin: $spacing-sm auto;
+    overflow: hidden;
+    box-shadow: inset 0 0 4px $shadow-color-dark;
+  }
+
+  #budgetBarContainer {
+    margin-bottom: $spacing-sm;
+  }
+
+  #energyBarLabel, #budgetBarLabel {
+    font-size: $font-xs;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: $font-sm;
+    font-weight: bold;
+    color: $text-light;
+    pointer-events: none;
+  }
+  
+  #energyBarFill {
+    height: 100%;
+    background: linear-gradient(to right, $energy-bar-start, $energy-bar-end);
+    width: 0%;
+    transition: width $transition-normal;
+  }
+
+  #budgetBarFill {
+    height: 100%;
+    background: linear-gradient(to right, $budget-bar-start, $budget-bar-end);
+    width: 0%;
+    transition: width $transition-normal;
+  }
+}
+
+// Layout container
+.layout {
+  display: flex;
+  flex-direction: row;
+  gap: $spacing-base;
+  padding: $spacing-base;
+  min-height: calc(100vh - #{$header-height});
+}
+
+// Scenario selector styling
+.scenario-selector {
+  width: 100%;
+  margin-bottom: $spacing-base;
+  
+  label {
+    width: 100%;
+  }
+  
+  select {
+    margin-top: $spacing-sm;
+    padding: $spacing-sm;
+    font-size: $font-base;
+    width: 100%;
+    border: 1px solid $border-color;
+    border-radius: $spacing-xs;
+    background-color: $text-light;
+    cursor: pointer;
+    
+    &:focus {
+      outline: none;
+      border-color: $accent-color;
+      box-shadow: 0 0 0 2px rgba($accent-color, 0.3);
+    }
+  }
+}
+
+// Input panel
+.input-panel {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: $spacing-base;
+  width: $input-panel-width;
+
+  label {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    font-weight: bold;
+    
+    // Fix for the info button positioning
+    .info-btn {
+      margin-left: $spacing-sm;
+      margin-right: $spacing-sm;
+      flex: 0 0 auto; // Prevent the button from growing or shrinking
+    }
+    
+    // Move the input to a new line and make it full width
+    input[type="number"] {
+      flex: 1 1 100%;
+      margin-top: $spacing-sm;
+      padding: $spacing-sm;
+      font-size: $font-base;
+    }
+  }
+
+  // Chart area
+  .chart-panel {
+    width: 100%;
+    flex: 1;
+    box-shadow: 0px -2px 5px $shadow-color;
+  }
+}
+
+// Info button styles
+.info-btn {
+  width: $info-button-size;
+  height: $info-button-size;
+  border-radius: $info-button-radius;
+  background-color: $border-color;
+  color: $text-light;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-xs;
+  transition: transform $transition-fast, background-color $transition-fast;
+  
+  &:hover {
+    background-color: darken($accent-color, 5%);
+    transform: scale(1.1);
+  }
+  
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba($accent-color, 0.5);
+  }
+}
+
+// Map area
+.map-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: $map-panel-width;
+  position: relative;
+
+  #interactiveMap {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    position: relative;
+  }
+
+  .hotspot {
+    position: absolute;
+    width: $hotspot-size;
+    height: $hotspot-size;
+    border-radius: 50%;
+    background-color: $hotspot-bg;
+    border: 2px solid $hotspot-border;
+    cursor: pointer;
+    transition: transform $transition-fast;
+    
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
+
+// Info Panel
+.info-panel {
+  width: $info-panel-width;
+  display: none;
+  padding: $spacing-base;
+  background-color: $text-light;
+  border-left: 1px solid $border-color;
+  box-shadow: -2px 0px 5px $shadow-color;
+
+  // This is the corrected part - class modifier should be connected to the parent
+  &.show {
+    display: block;
+  }
+
+  // Fix ID selector
+  #infoContent {
+    padding: $spacing-base;
+    background-color: $background-light;
+    border-radius: $spacing-sm;
+    
+    img {
+      max-width: 100%;
+      height: auto;
+      margin: $spacing-base 0;
+      border-radius: $spacing-xs;
+    }
+    
+    h3 {
+      margin-top: 0;
+      color: $accent-color;
+    }
+    
+    ul {
+      padding-left: $spacing-lg;
+    }
+  }
+}
+
+.energy-split-container {
+  margin: $spacing-base 0;
+  
+  .split-details {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: $spacing-sm;
+    font-weight: bold;
+    
+    .split-heat {
+      color: coral;
+    }
+    
+    .split-electric {
+      color: #f3d40f;
+    }
+  }
+}
+
+.subtypes-container {
+  margin-top: $spacing-lg;
+  
+  .subtypes-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-base;
+  }
+  
+  .subtype-item {
+    background-color: lighten($background-light, 2%);
+    border-radius: $spacing-xs;
+    padding: $spacing-sm;
+    box-shadow: 0 1px 3px $shadow-color;
+    
+    h5 {
+      margin-top: 0;
+      margin-bottom: $spacing-xs;
+      color: $accent-color;
+      border-bottom: 1px solid $border-color;
+      padding-bottom: $spacing-xs;
+    }
+    
+    .subtype-details {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-sm;
+      
+      .keywords {
+        font-size: $font-sm;
+        
+        span {
+          font-weight: bold;
+        }
+      }
+      
+      .ratings {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        
+        .rating {
+          flex: 1 1 48%;
+          display: flex;
+          align-items: center;
+          gap: $spacing-xs;
+          font-size: $font-sm;
+          margin-bottom: $spacing-xs;
+          
+          span:first-child {
+            font-weight: bold;
+          }
+          
+          .rating-value {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            color: $text-light;
+            text-align: center;
+            line-height: 24px;
+            font-weight: bold;
+          }
+          
+          .rating-a {
+            background-color: #2ecc71; // Green for A rating
+          }
+          
+          .rating-b {
+            background-color: #f39c12; // Orange for B rating
+          }
+          
+          .rating-c {
+            background-color: #e74c3c; // Red for C rating
+          }
+        }
+      }
+    }
+  }
+}
+
+// Tablet Media Query
+@media screen and (max-width: $breakpoint-tablet) {
+  body {
+    padding-top: $header-height-tablet;
+  }
+
+  header {
+    height: auto;
+    padding: $spacing-sm;
+
+    .title {
+      font-size: $font-md;
+      margin-bottom: $spacing-xs;
+    }
+
+    #energyStatus {
+      flex-direction: column;
+      align-items: center;
+      gap: $spacing-xs;
+      margin-top: $spacing-xs;
+
+      span {
+        margin: $spacing-xs / 2 0;
+      }
+    }
+
+    #energyBarContainer, #budgetBarContainer {
+      width: 100%;
+      margin: $spacing-xs auto;
+    }
+  }
+
+  .layout {
+    flex-direction: column;
+    gap: $spacing-base;
+  }
+
+  .input-panel {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    label {
+      flex: 1 1 45%; // Allow two labels per row
+      padding-right: $spacing-sm;
+      margin-bottom: $spacing-sm;
+    }
+  }
+
+  .map-panel {
+    width: 100%;
+    margin-bottom: $spacing-base;
+  }
+
+  .info-panel {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid $border-color;
+    box-shadow: 0px -2px 5px $shadow-color;
+  }
+}
+
+// Mobile Media Query
+@media screen and (max-width: $breakpoint-mobile) {
+  body {
+    padding-top: $header-height-mobile;
+  }
+
+  header {
+    padding: $spacing-sm $spacing-xs;
+
+    .title {
+      font-size: $font-base;
+    }
+
+    #energyStatus {
+      span {
+        font-size: $font-xs;
+        width: 100%;
+        text-align: center;
+      }
+    }
+  }
+
+  .input-panel {
+    flex-direction: column;
+    gap: $spacing-sm;
+
+    label {
+      flex: 1 1 100%; // Stack labels vertically
+      padding-right: 0;
+      margin-bottom: $spacing-sm;
+    }
+
+    input[type="number"] {
+      font-size: $font-sm;
+      padding: $spacing-xs;
+    }
+  }
+
+  .hotspot {
+    width: $hotspot-size-mobile !important;
+    height: $hotspot-size-mobile !important;
+  }
+
+  .info-panel {
+    #infoContent {
+      padding: $spacing-md;
+      
+      h3 {
+        font-size: $font-md;
+      }
+      
+      h4 {
+        font-size: $font-base;
+      }
+      
+      ul {
+        padding-left: $spacing-md;
+      }
+    }
+  }
+}
